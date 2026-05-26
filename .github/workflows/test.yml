@@ -41,3 +41,17 @@ jobs:
         run: |
           forge test -vvv
         id: test
+<<<<<<< HEAD
+=======
+
+      - name: Configure Git for auto-commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "chore: auto-commit via CI" || echo "No changes to commit"
+          git push origin main
+>>>>>>> 236a13eaa1accebbb8ea253dc8637e0ac9c445df
