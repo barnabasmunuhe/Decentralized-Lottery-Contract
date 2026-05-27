@@ -1,0 +1,11 @@
+{
+  "lib/chainlink": {
+    "rev": "a5965ae1e6346bd2638c81916230b7ce4d2c1260"
+  },
+  "lib/foundry-devops": {
+    "rev": "f3a763e55a565f30bc730e39ee29cfdb6fa66dbe"
+  },
+  "lib/solmate": {
+    "rev": "c93f7716c9909175d45f6ef80a34a650e2d24e56"
+  }
+}

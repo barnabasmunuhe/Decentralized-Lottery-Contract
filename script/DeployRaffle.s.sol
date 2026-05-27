@@ -1,17 +1,5 @@
-<<<<<<< HEAD
-// SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.19;
-
-import {Script} from "forge-std/Script.sol";
-import {Raffle} from "../src/RaffleContract.sol";
-import {HelperConfig} from "./HelperConfig.s.sol";
-
-contract DeployRaffle is Script {
-    function run() external {
-=======
 //SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.19;
 
 import {Script} from "forge-std/Script.sol";
 import {Raffle} from "src/Raffle.sol";
@@ -20,15 +8,10 @@ import {CreateSubscription, FundSubscription, AddConsumer} from "script/Interact
 
 contract DeployRaffle is Script {
     function run() public {
->>>>>>> 236a13eaa1accebbb8ea253dc8637e0ac9c445df
         deployContract();
     }
 
     function deployContract() public returns (Raffle, HelperConfig) {
-<<<<<<< HEAD
-        vm.startBroadcast();
-        HelperConfig helperConfig = new HelperConfig();
-=======
         HelperConfig helperConfig = new HelperConfig();
 
         // local -> deploy mocks, get local config
@@ -62,6 +45,5 @@ contract DeployRaffle is Script {
         addConsumer.addConsumer(address(raffle), config.vrfCoordinator, config.subscriptionId, config.account);
 
         return (raffle, helperConfig);
->>>>>>> 236a13eaa1accebbb8ea253dc8637e0ac9c445df
     }
 }

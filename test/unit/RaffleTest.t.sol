@@ -1,33 +1,15 @@
-<<<<<<< HEAD
-// SPDX-License-Identifier: MIT
-
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {Test} from "forge-std/Test.sol";
-import {Raffle} from "src/RaffleContract.sol";
-import {HelperConfig} from "script/HelperConfig.s.sol";
-import {DeployRaffle} from "script/DeployRaffle.s.sol";
-
-contract RaffleTest is Test {
-    Raffle public raffle;
-    HelperConfig public helperConfig;
-
-    function setUp() public {
-        // HelperConfig helperConfig = new HelperConfig();
-        // (raffle,);
-=======
-//SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
-
-import {Test} from "forge-std/Test.sol";
+import {Test} from "forge-std/src/Test.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {Raffle} from "src/Raffle.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
-import {Vm} from "../forge-std/src/Vm.sol";
-import {VRFCoordinatorV2Mock} from "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
+import {Vm} from "forge-std/src/Vm.sol";
+import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {CodeConstants} from "script/HelperConfig.s.sol";
 
-contract RaffleTest is Test, CodeConstants{
+contract RaffleTest is Test, CodeConstants {
     // Here we are using Raffle contract as a data type inorder to name it differently to avoid confusion.
     Raffle public raffle;
     HelperConfig public helperConfig;
@@ -114,7 +96,7 @@ contract RaffleTest is Test, CodeConstants{
         vm.warp(block.timestamp + interval + 1); // sets a block timestamp;
         vm.roll(block.number + 1);
         // Act
-        (bool UpkeepNeeded, ) = raffle.checkUpkeep("");
+        (bool UpkeepNeeded,) = raffle.checkUpkeep("");
 
         // Assert
         assert(!UpkeepNeeded);
@@ -130,7 +112,7 @@ contract RaffleTest is Test, CodeConstants{
         // this should close the raffle
 
         // Act
-        (bool UpkeepNeeded, ) = raffle.checkUpkeep("");
+        (bool UpkeepNeeded,) = raffle.checkUpkeep("");
 
         // Assert
         assert(!UpkeepNeeded);
@@ -172,21 +154,13 @@ contract RaffleTest is Test, CodeConstants{
 
         // Act / Assert
         vm.expectRevert(
-            abi.encodeWithSelector(
-                Raffle.Raffle__UpkeepNotNeeded.selector,
-                currentBalance,
-                numPlayers,
-                rState
-            )
+            abi.encodeWithSelector(Raffle.Raffle__UpkeepNotNeeded.selector, currentBalance, numPlayers, rState)
         );
         raffle.performUpkeep("");
     }
 
     // What if we need to get data from our emitted events in our tests?
-    function testPerfomUpkeepUpdatesRaffleStateAndEmitsRequestId()
-        public
-        raffleEntered
-    {
+    function testPerfomUpkeepUpdatesRaffleStateAndEmitsRequestId() public raffleEntered {
         // Act
         vm.recordLogs();
         raffle.performUpkeep("");
@@ -206,33 +180,20 @@ contract RaffleTest is Test, CodeConstants{
         _;
     }
 
-    function testFulfillrandomWordsCanOnlyBeCalledAfterPerformUpkeep(
-        uint256 randomRequestId
-    ) public raffleEntered {
+    function testFulfillrandomWordsCanOnlyBeCalledAfterPerformUpkeep(uint256 randomRequestId) public raffleEntered {
         // Arrange / Act / Assert
         vm.expectRevert(VRFCoordinatorV2_5Mock.InvalidRequest.selector);
-        VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(
-            randomRequestId,
-            address(raffle)
-        ); // here we are pretending to be vrfCoordinator
+        VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomRequestId, address(raffle)); // here we are pretending to be vrfCoordinator
         // inorder to access fulfillRandomWords(); //ONLY nodes are allowed to access this.
     }
 
-    function testFulfillRandomWordsPicksAWinnerResetsAndSendsMoney()
-        public
-        raffleEntered
-        skipFork
-    {
+    function testFulfillRandomWordsPicksAWinnerResetsAndSendsMoney() public raffleEntered skipFork {
         // Arrange
         uint256 additionalEntrants = 3; //4 total
         uint256 startingIndex = 1;
         address expectedWinner = address(1);
 
-        for (
-            uint256 b = startingIndex;
-            b < startingIndex + additionalEntrants;
-            b++
-        ) {
+        for (uint256 b = startingIndex; b < startingIndex + additionalEntrants; b++) {
             address newPlayer = address(uint160(b));
             hoax(newPlayer, 1 ether);
             raffle.enterRaffle{value: entranceFee}();
@@ -245,10 +206,7 @@ contract RaffleTest is Test, CodeConstants{
         raffle.performUpkeep("");
         Vm.Log[] memory entries = vm.getRecordedLogs(); // says all the emitted events stick them into the entries array
         bytes32 requestId = entries[1].topics[1];
-        VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(
-            uint256(requestId),
-            address(raffle)
-        ); // this should give a random no to our raffle
+        VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(uint256(requestId), address(raffle)); // this should give a random no to our raffle
 
         // Assert
         address recentWinner = raffle.getRecentWinner();
@@ -261,6 +219,5 @@ contract RaffleTest is Test, CodeConstants{
         assert(uint256(raffleState) == 0);
         assert(winnerBalance == winnerStartingBalance + prize);
         assert(endingTimeStamp > startingTimeStamp);
->>>>>>> 236a13eaa1accebbb8ea253dc8637e0ac9c445df
     }
 }
