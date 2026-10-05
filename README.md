@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 469e462 (feat:Project imports refactor)
 # 🎰 Raffle Smart Contract (Production Upgrade Roadmap)
 
 A decentralized, automated lottery system built with Solidity and Foundry, leveraging Chainlink VRF for verifiable randomness and Chainlink Automation for trustless execution.
@@ -232,4 +228,4 @@ It’s a system designed to master:
 - Secure fund handling
 - Protocol-level engineering
 
-> Treat every upgrade like it’s going to mainnet.
+> Treating every upgrade like it’s going to mainnet.
